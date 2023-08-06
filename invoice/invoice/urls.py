@@ -20,7 +20,7 @@ from app.views import invoice_list ,homePage,invoiceForm ,getInvoiceData
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('invoices/', invoice_list, name='invoice-list'),
+    #path('invoices/', invoice_list, name='invoice-list'),
     path('' ,homePage , name='home-page'),
     path('invoice-detail/' , invoiceForm),
     path('send-detail/' ,getInvoiceData),
