@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .mar{
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        <label class="mar" for="">Invoice number</label>
+        <input id="invoiceNo" type="text">
+        <br><br>
+        <label class="mar" for="">Description</label>
+        <input type="text" name="" id="desc"><br><br>
+        <label class="mar" for="">Quantity</label>
+        <input type="text" id="quantity"><br><br>
+        <label class="mar" for="">unit_price</label>
+        <input type="text" name="" id="price"><br><br>
+        <button id="subbtn" type="submit">Submit</button>
+    </form>
+
+    <script>
+        function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+        
+        let submitButton = document.getElementById('subbtn')
+        submitButton.addEventListener('click' , submitForm)
+        let invoiceNumber = ''
+        let description = ''
+        let quantity = ''
+        let unitPrice = ''
+        let price = ''
+        function submitForm(event){
+            event.preventDefault()
+            invoiceNumber = document.getElementById('invoiceNo').value
+            description = document.getElementById('desc').value
+            quantity = document.getElementById('quantity').value
+            unitPrice = document.getElementById('price').value
+            price = parseInt(quantity) * parseInt(unitPrice)
+            console.log(price)
+            sendData()
+        }
+
+        function sendData(){
+            let url = '/send-detail/'
+            fetch(url ,{
+                method:'POST',
+                headers:{
+                    'X-CSRFToken':csrftoken,
+                    'content-type':'application/json',
+                },
+                body:JSON.stringify({
+                    'invoiceNo':parseInt(invoiceNumber),
+                    'description':description,
+                    'quantity':parseInt(quantity),
+                    'unit_price':parseInt(unitPrice),
+                    'price':price,
+                })
+            }).then((Response)=>Response.json()).then((data)=>{
+                console.log(data)
+            })
+        }
+    </script>
+</body>
+</html>
